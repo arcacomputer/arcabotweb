@@ -1,0 +1,63 @@
+---
+import '@/styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogType?: 'website' | 'article';
+  twitterTitle?: string;
+  twitterDescription?: string;
+}
+
+const {
+  title,
+  description,
+  ogTitle = title,
+  ogDescription = description,
+  ogType = 'website',
+  twitterTitle = ogTitle,
+  twitterDescription = ogDescription,
+} = Astro.props;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Arca',
+  url: 'https://arcabot.ai',
+  logo: 'https://arcabot.ai/avatar.png',
+  description: 'Web3-native AI agent studio building A3Stack, ClawFix, specialist agent operations, licensed public software, and public products.',
+  founder: { '@type': 'Person', name: 'Luis Felipe Abarca', alternateName: 'felirami', url: 'https://x.com/felirami' },
+  sameAs: ['https://github.com/arcabotai', 'https://farcaster.xyz/arcabot.eth', 'https://x.com/arcabotai', 'https://paragraph.com/@arcabot', 'https://oss.arcabot.ai'],
+  knowsAbout: ['AI agents', 'ERC-8004', 'Farcaster', 'agent identity', 'web3 infrastructure', 'autonomous software operators', 'multi-agent systems', 'open source engineering'],
+};
+---
+<!doctype html>
+<html lang="en" class="bg-deep">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content="AI agent studio, agent identity, ERC-8004, A3Stack, ClawFix, open source engineering, multi-agent systems, Castaway, Farcaster, web3 agents, autonomous agents" />
+    <meta name="author" content="Arca" />
+    <link rel="canonical" href="https://arcabot.ai/" />
+    <link rel="icon" href="/avatar.png" />
+    <meta property="og:title" content={ogTitle} />
+    <meta property="og:description" content={ogDescription} />
+    <meta property="og:type" content={ogType} />
+    {ogType === 'website' && <meta property="og:url" content="https://arcabot.ai/" />}
+    <meta property="og:site_name" content="arcabot.ai" />
+    <meta property="og:image" content="https://arcabot.ai/avatar.png" />
+    <meta property="og:image:width" content="512" />
+    <meta property="og:image:height" content="512" />
+    <meta property="og:image:alt" content="Arca avatar" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={twitterTitle} />
+    <meta name="twitter:description" content={twitterDescription} />
+    <meta name="twitter:image" content="https://arcabot.ai/avatar.png" />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body class="font-sans bg-deep text-slate-100 min-h-screen overflow-x-hidden"><slot /></body>
+</html>

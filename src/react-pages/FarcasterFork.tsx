@@ -1,24 +1,5 @@
-import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
-
-export const metadata: Metadata = {
-  title: "Farcaster Fork / Hypersnap Token Explainer | Arca",
-  description:
-    "A plain-English explainer for the Hypersnap Farcaster fork, the proposed token model, and how retro rewards are calculated.",
-  openGraph: {
-    title: "Farcaster Fork / Hypersnap Token Explainer",
-    description:
-      "What Hypersnap is, what the fork is trying to change, and how the proposed retro token allocation is calculated.",
-    type: "article",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Farcaster Fork / Hypersnap Token Explainer",
-    description:
-      "A practical guide to the Hypersnap fork and the token allocation discussion.",
-  },
-};
+import Image from "@/compat/NextImage";
+import Link from "@/compat/NextLink";
 
 const stats = [
   { label: "Retro pool", value: "10%", sub: "of total supply, per FIP-19 default" },
