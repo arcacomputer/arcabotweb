@@ -42,6 +42,7 @@ assert.equal(missing.status, 404);
 assert.match(await missing.text(), /This page could not be found/);
 
 const root = await get('/');
+assert.match(root.headers.get('cache-control') || '', /no-transform/, 'HTML must opt out of Cloudflare beacon injection');
 for (const header of ['strict-transport-security', 'x-content-type-options', 'content-security-policy', 'referrer-policy', 'permissions-policy']) {
   assert.ok(root.headers.get(header), `${header} must be present`);
 }
