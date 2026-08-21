@@ -80,4 +80,8 @@ test('preserves Snap API behavior and explicitly retires presale URLs', async ()
   assert.equal(snap.headers.get('content-type'), 'application/vnd.farcaster.snap+json');
 
   assert.equal(assetFetches.length, 0, 'API and retired routes must not fall through to assets');
+
+  const htmlEnv = { ASSETS: { fetch: async () => new Response('<!doctype html>', { headers: { 'Content-Type': 'text/html', 'Cache-Control': 'public, max-age=0, must-revalidate' } }) } };
+  const page = await worker.fetch(new Request('https://arcabot.ai/'), htmlEnv);
+  assert.match(page.headers.get('cache-control') || '', /no-transform/);
 });
