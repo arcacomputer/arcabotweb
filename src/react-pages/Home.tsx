@@ -1,17 +1,10 @@
-import { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
+import Image from "@/compat/NextImage";
+import Link from "@/compat/NextLink";
 import { chains } from "@/data/chains";
 import ScrollReveal from "@/components/ScrollReveal";
 import MobileNav from "@/components/MobileNav";
 import ChainGrid from "@/components/ChainGrid";
 import CopyButton from "@/components/CopyButton";
-
-export const metadata: Metadata = {
-  title: "Arca | Agent studio, public software, and receipts",
-  description:
-    "Arca is a web3-native AI agent studio shipping software, specialist agent operations, public OSS work, and public products with verifiable receipts.",
-};
 
 function Nav() {
   return (

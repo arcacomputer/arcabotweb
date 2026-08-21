@@ -1,5 +1,4 @@
-module.exports = (req, res) => {
-  const payload = {
+const SNAP_PAYLOAD = {
     version: "2.0",
     theme: { accent: "green" },
     ui: {
@@ -91,24 +90,64 @@ module.exports = (req, res) => {
     },
   };
 
-  res.setHeader("Content-Type", "application/vnd.farcaster.snap+json");
-  res.setHeader("Cache-Control", "no-store");
-  res.setHeader("Vary", "Accept");
-  res.setHeader(
-    "Link",
-    '</snap/farcaster-fork-reality-check>; rel="alternate"; type="application/vnd.farcaster.snap+json", </farcaster-fork>; rel="alternate"; type="text/html"'
-  );
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.setHeader("Access-Control-Expose-Headers", "Content-Type, Link");
+const SNAP_PATHS = new Set([
+  '/api/snap/farcaster-fork-reality-check/',
+  '/snap/farcaster-fork-reality-check/',
+]);
 
-  if (req.method === "OPTIONS") {
-    res.statusCode = 204;
-    res.end();
-    return;
-  }
+const snapHeaders = () => new Headers({
+  'Content-Type': 'application/vnd.farcaster.snap+json',
+  'Cache-Control': 'no-store',
+  'Vary': 'Accept',
+  'Link': '</snap/farcaster-fork-reality-check>; rel="alternate"; type="application/vnd.farcaster.snap+json", </farcaster-fork>; rel="alternate"; type="text/html"',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type, Accept',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Expose-Headers': 'Content-Type, Link',
+});
 
-  res.statusCode = 200;
-  res.end(JSON.stringify(payload));
+function retiredPresale() {
+  return new Response('The $ARCA presale is no longer available.', {
+    status: 410,
+    headers: {
+      'Content-Type': 'text/plain; charset=utf-8',
+      'Cache-Control': 'public, max-age=3600',
+      'X-Robots-Tag': 'noindex, nofollow',
+    },
+  });
+}
+
+function permanentSlashRedirect(url) {
+  const target = new URL(url);
+  target.pathname += '/';
+  return new Response(null, { status: 308, headers: { Location: target.toString() } });
+}
+
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+
+    if (url.pathname === '/presale' || url.pathname.startsWith('/presale/')) {
+      return retiredPresale();
+    }
+
+    if (SNAP_PATHS.has(url.pathname)) {
+      const headers = snapHeaders();
+      if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers });
+      return new Response(JSON.stringify(SNAP_PAYLOAD), { status: 200, headers });
+    }
+
+    const lastSegment = url.pathname.split('/').pop() || '';
+    if (url.pathname !== '/' && !url.pathname.endsWith('/') && !lastSegment.includes('.')) {
+      return permanentSlashRedirect(url);
+    }
+
+    if (url.pathname.endsWith('/')) {
+      const assetUrl = new URL(url);
+      assetUrl.pathname += 'index.html';
+      return env.ASSETS.fetch(new Request(assetUrl, request));
+    }
+
+    return env.ASSETS.fetch(request);
+  },
 };

@@ -1,7 +1,7 @@
 node_modules/
-.next/
-out/
+dist/
+.astro/
+.wrangler/
 *.tsbuildinfo
 .vercel/
 .env*
-.vercel

@@ -1,25 +1,5 @@
-import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
-
-export const metadata: Metadata = {
-  title: "Hypersnap / Snap Token Naming Memo | Arca",
-  description:
-    "A serious naming memo for the Hypersnap / Snap token: stewardship framing, ticker alternatives, collision notes, and decision criteria.",
-  openGraph: {
-    title: "Hypersnap / Snap Token Naming Memo",
-    description:
-      "Ticker naming rationale for the Hypersnap / Snapchain continuity debate.",
-    type: "article",
-    images: ["/avatar.png"],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Hypersnap / Snap Token Naming Memo",
-    description:
-      "A practical decision memo for naming the Hypersnap / Snap token.",
-  },
-};
+import Image from "@/compat/NextImage";
+import Link from "@/compat/NextLink";
 
 const candidates = [
   {
